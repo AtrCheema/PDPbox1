@@ -8,10 +8,15 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 import copy
-from sklearn.cluster import MiniBatchKMeans, KMeans
+
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
+
+try:
+    from sklearn.cluster import MiniBatchKMeans, KMeans
+except (ModuleNotFoundError, ImportError):
+    MiniBatchKMeans, KMeans = None, None
 
 def _draw_pdp_countplot(count_data, count_ax, pdp_ax, feature_type, display_columns, plot_params):
     """Plot data point distribution bar"""
@@ -221,6 +226,8 @@ def _ice_line_plot(x, ice_plot_data, feature_grids, ax, plot_params):
 
 def _ice_cluster_plot(x, ice_lines, feature_grids, n_cluster_centers, cluster_method, ax, plot_params):
     """Cluster ICE lines"""
+
+    assert KMeans is not None, f"please install sklearn"
 
     if cluster_method not in ['approx', 'accurate']:
         raise ValueError('cluster method: should be "approx" or "accurate".')

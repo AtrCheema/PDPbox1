@@ -1,7 +1,10 @@
 
 import numpy as np
 import pandas as pd
-import psutil
+try:
+    import psutil
+except (ModuleNotFoundError, ImportError):
+    psutil = None
 
 
 def _check_feature(feature, df):
@@ -156,6 +159,7 @@ def _plot_title(title, subtitle, title_ax, plot_params):
 
 def _calc_memory_usage(df, total_units, n_jobs, memory_limit):
     """Calculate n_jobs to use"""
+    assert psutil is not None, f"please istall psutil"
     unit_memory = df.memory_usage(deep=True).sum()
     free_memory = psutil.virtual_memory()[1] * memory_limit
     num_units = int(np.floor(free_memory / unit_memory))

@@ -7,9 +7,9 @@ setup(name='PDPbox',
       version=versioneer.get_version(),
       cmdclass=versioneer.get_cmdclass(),
       description='python partial dependence plot toolbox',
-      author='SauceCat',
-      author_email='jiangchun.lee@gmail.com',
-      url='https://github.com/SauceCat/PDPbox',
+      author='AtrCheema',
+      author_email='ather_abbas786@yahoo.com',
+      url='https://github.com/AtrCheema/PDPbox1',
       license='MIT',
       classifiers = [],
       install_requires=[
@@ -18,7 +18,11 @@ setup(name='PDPbox',
           'scipy',
           'joblib',
           'psutil',
-          'matplotlib==3.1.1',
+          'matplotlib',
           'sklearn'
       ],
-      zip_safe=False)
+      extra_require={
+          "mini": ['pandas', 'numpy', 'scipy', 'matplotlib']
+      },
+      zip_safe=False
+      )
