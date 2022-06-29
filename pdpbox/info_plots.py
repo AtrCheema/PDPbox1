@@ -164,8 +164,10 @@ def q3(x):
     return x.quantile(0.75)
 
 
-def actual_plot(model, X, feature, feature_name, num_grid_points=10, grid_type='percentile', percentile_range=None,
-                grid_range=None, cust_grid_points=None, show_percentile=False, show_outliers=False, endpoint=True,
+def actual_plot(model, X, feature, feature_name, num_grid_points=10, grid_type='percentile',
+                percentile_range=None,
+                grid_range=None, cust_grid_points=None, show_percentile=False,
+                show_outliers=False, endpoint=True,
                 which_classes=None, predict_kwds={}, ncols=2, figsize=None, plot_params=None):
     """Plot prediction distribution across different feature values (feature grid)
 
@@ -466,10 +468,14 @@ def target_plot_interact(df, features, feature_names, target, num_grid_points=No
     return fig, axes, summary_df
 
 
-def actual_plot_interact(model, X, features, feature_names, num_grid_points=None, grid_types=None,
-                         percentile_ranges=None, grid_ranges=None, cust_grid_points=None, show_percentile=False,
-                         show_outliers=False, endpoint=True, which_classes=None, predict_kwds={}, ncols=2,
-                         figsize=None, annotate=False, plot_params=None):
+def actual_plot_interact(model, X, features, feature_names, num_grid_points=None,
+                         grid_types=None,
+                         percentile_ranges=None, grid_ranges=None,
+                         cust_grid_points=None, show_percentile=False,
+                         show_outliers=False, endpoint=True, which_classes=None,
+                         predict_kwds={}, ncols=2,
+                         figsize=None, annotate=False, plot_params=None,
+                         annotate_counts=True):
     """Plot prediction distribution across different feature value combinations (feature grid combinations)
 
     Parameters
@@ -510,6 +516,8 @@ def actual_plot_interact(model, X, features, feature_names, num_grid_points=None
         number subplot columns, used when it is multi-class problem
     annotate: bool, default=False
         whether to annotate the points
+    annotate_counts : bool, default=False
+        whether to annotate counts or not.
     plot_params: dict or None, optional, default=None
         parameters for the plot
 
@@ -618,6 +626,7 @@ def actual_plot_interact(model, X, features, feature_names, num_grid_points=None
         feature_names=feature_names, display_columns=display_columns,
         percentile_columns=percentile_columns, ys=[col + '_q2' for col in actual_prediction_columns],
         plot_data=actual_plot_data, title=title, subtitle=subtitle, figsize=figsize,
-        ncols=ncols, annotate=annotate, plot_params=plot_params, is_target_plot=False)
+        ncols=ncols, annotate=annotate, plot_params=plot_params, is_target_plot=False,
+        annotate_counts=annotate_counts)
 
     return fig, axes, summary_df

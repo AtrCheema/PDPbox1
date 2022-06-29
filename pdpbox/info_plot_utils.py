@@ -404,7 +404,8 @@ def _actual_plot(plot_data, bar_data, box_lines, actual_prediction_columns, feat
 
 
 def _plot_interact(plot_data, y, plot_ax, feature_names, display_columns, percentile_columns,
-                   marker_sizes, cmap, line_width, xticks_rotation, font_family, annotate):
+                   marker_sizes, cmap, line_width, xticks_rotation, font_family, annotate,
+                   annotate_counts=True):
     """Interact scatter plot"""
 
     plot_ax.set_xticks(range(len(display_columns[0])))
@@ -445,7 +446,10 @@ def _plot_interact(plot_data, y, plot_ax, feature_names, display_columns, percen
     if annotate:
         for text_idx in range(plot_data.shape[0]):
             plot_data_idx = plot_data.iloc[text_idx]
-            text_s = '%d\n%.3f' % (plot_data_idx['fake_count'], plot_data_idx[y])
+            if annotate_counts:
+                text_s = '%d\n%.1f' % (plot_data_idx['fake_count'], plot_data_idx[y])
+            else:
+                text_s = '%.1f' % (plot_data_idx[y])
             txt = plot_ax.text(x=plot_data_idx['x1'], y=plot_data_idx['x2'], s=text_s,
                                fontdict={'family': font_family, 'color': plt.get_cmap(cmap)(1.), 'size': 11},
                                va='center', ha='left')
@@ -493,8 +497,10 @@ def _plot_legend_circles(count_min, count_max, circle_ax, cmap, font_family):
     _modify_legend_ax(circle_ax, font_family)
 
 
-def _info_plot_interact(feature_names, display_columns, percentile_columns, ys, plot_data, title, subtitle,
-                        figsize, ncols, annotate, plot_params, is_target_plot=True):
+def _info_plot_interact(feature_names, display_columns, percentile_columns, ys,
+                        plot_data, title, subtitle,
+                        figsize, ncols, annotate, plot_params, is_target_plot=True,
+                        annotate_counts=True):
     """Internal call for _info_plot_interact"""
 
     width, height = 15, 10
@@ -533,7 +539,8 @@ def _info_plot_interact(feature_names, display_columns, percentile_columns, ys, 
 
     interact_params = {'plot_data': plot_data, 'feature_names': feature_names, 'display_columns': display_columns,
                        'percentile_columns': percentile_columns, 'marker_sizes': marker_sizes, 'line_width': line_width,
-                       'xticks_rotation': xticks_rotation, 'font_family': font_family, 'annotate': annotate}
+                       'xticks_rotation': xticks_rotation, 'font_family': font_family, 'annotate': annotate,
+                       'annotate_counts': annotate_counts}
     if len(ys) == 1:
         inner_grid = GridSpecFromSubplotSpec(2, 1, subplot_spec=outer_grid[1], height_ratios=[height-3, 1], hspace=0.25)
         value_ax = plt.subplot(inner_grid[0])
