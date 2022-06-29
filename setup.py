@@ -22,7 +22,7 @@ setup(name='PDPbox',
           'sklearn'
       ],
       extra_require={
-          "mini": ['pandas', 'numpy', 'scipy', 'matplotlib']
+          "mini": ['pandas', 'numpy', 'matplotlib']
       },
       zip_safe=False
       )
