@@ -5,6 +5,9 @@
 
 python partial dependence plot toolbox
 
+## Difference with original PDPBox library
+see examples directory
+
 
 ## Update! 😹
 <img src="images/3_years_codes.gif" />
