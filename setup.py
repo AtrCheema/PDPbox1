@@ -12,17 +12,16 @@ setup(name='PDPbox1',
       url='https://github.com/AtrCheema/PDPbox1',
       license='MIT',
       classifiers = [],
-      install_requires=[
-          'pandas',
-          'numpy',
-          'scipy',
-          'joblib',
-          'psutil',
-          'matplotlib',
-          'sklearn'
-      ],
+      install_requires=['pandas', 'numpy', 'matplotlib', 'scipy'],
       extras_require={
-          "mini": ['pandas', 'numpy', 'matplotlib']
+          "all": [
+              'pandas',
+              'numpy',
+              'scipy',
+              'joblib',
+              'psutil',
+              'matplotlib',
+              'sklearn']
       },
       zip_safe=False
       )
