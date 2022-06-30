@@ -21,7 +21,7 @@ setup(name='PDPbox1',
           'matplotlib',
           'sklearn'
       ],
-      extra_require={
+      extras_require={
           "mini": ['pandas', 'numpy', 'matplotlib']
       },
       zip_safe=False
