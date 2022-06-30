@@ -1,4 +1,10 @@
 
+import numpy as np
+import pandas as pd
+import matplotlib
+import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
 from .info_plot_utils import (_target_plot, _info_plot_interact, _actual_plot, _prepare_info_plot_interact_data,
                               _prepare_info_plot_interact_summary, _prepare_info_plot_data,
                               _check_info_plot_interact_params, _check_info_plot_params)
@@ -468,14 +474,28 @@ def target_plot_interact(df, features, feature_names, target, num_grid_points=No
     return fig, axes, summary_df
 
 
-def actual_plot_interact(model, X, features, feature_names, num_grid_points=None,
+def actual_plot_interact(model, X, features, feature_names,
+                         num_grid_points=None,
                          grid_types=None,
-                         percentile_ranges=None, grid_ranges=None,
-                         cust_grid_points=None, show_percentile=False,
-                         show_outliers=False, endpoint=True, which_classes=None,
-                         predict_kwds={}, ncols=2,
-                         figsize=None, annotate=False, plot_params=None,
-                         annotate_counts=True):
+                         percentile_ranges=None,
+                         grid_ranges=None,
+                         cust_grid_points=None,
+                         show_percentile=False,
+                         show_outliers=False,
+                         endpoint=True,
+                         which_classes=None,
+                         predict_kwds={},
+                         ncols=2,
+                         figsize=None,
+                         annotate=False,
+                         plot_params=None,
+                         annotate_counts=True,
+                         plot_type="circles",
+                         annotate_colors=("black", "white"),
+                         annotate_color_threshold=None,
+                         annotate_fmt=None,
+                         annotate_fontsize=7
+                         ):
     """Plot prediction distribution across different feature value combinations (feature grid combinations)
 
     Parameters
@@ -518,6 +538,14 @@ def actual_plot_interact(model, X, features, feature_names, num_grid_points=None
         whether to annotate the points
     annotate_counts : bool, default=False
         whether to annotate counts or not.
+    plot_type : str, optional (default="circles")
+        either ``circles`` or ``hetmap``
+    annotate_colors : tuple
+        pair of colors
+    annotate_color_threshold : float
+    annotate_fmt : str
+        format for annotation
+    annotate_fontsize : int
     plot_params: dict or None, optional, default=None
         parameters for the plot
 
@@ -622,11 +650,198 @@ def actual_plot_interact(model, X, features, feature_names, num_grid_points=None
     subtitle = plot_params.get('subtitle',
                                'Medium value of actual prediction through different feature value combinations.')
 
-    fig, axes = _info_plot_interact(
-        feature_names=feature_names, display_columns=display_columns,
-        percentile_columns=percentile_columns, ys=[col + '_q2' for col in actual_prediction_columns],
-        plot_data=actual_plot_data, title=title, subtitle=subtitle, figsize=figsize,
-        ncols=ncols, annotate=annotate, plot_params=plot_params, is_target_plot=False,
-        annotate_counts=annotate_counts)
+    if plot_type== "circles":
+        fig, axes = _info_plot_interact(
+            feature_names=feature_names, display_columns=display_columns,
+            percentile_columns=percentile_columns, ys=[col + '_q2' for col in actual_prediction_columns],
+            plot_data=actual_plot_data, title=title, subtitle=subtitle, figsize=figsize,
+            ncols=ncols, annotate=annotate, plot_params=plot_params, is_target_plot=False,
+            annotate_counts=annotate_counts)
+    else:
+        vals = []
+        for i in np.unique(summary_df['x1']):
+            row = summary_df['actual_prediction_q2'].loc[summary_df['x1'] == i]
+            for j in np.unique(summary_df['x2'])[::-1]:
+                vals.append(row.iloc[j])
+
+        counts = []
+        for i in np.unique(summary_df['x1']):
+            row = summary_df['count'].loc[summary_df['x1'] == i]
+            for j in np.unique(summary_df['x2'])[::-1]:
+                counts.append(row.iloc[j])
+
+        xticklabels = summary_df.loc[summary_df['x1'] == 0]['display_column_2'].values[::-1]
+
+        #if yticklabels is None:
+        yticklabels = summary_df.loc[summary_df['x2'] == 0]['display_column_1'].values
+
+        x = np.array(vals).reshape(len(yticklabels), len(xticklabels))
+        df = pd.DataFrame(x, columns=xticklabels, index=yticklabels)
+
+        counts = np.array(counts).reshape(len(yticklabels), len(xticklabels))
+        counts = pd.DataFrame(counts, columns=xticklabels, index=yticklabels, dtype=int)
+
+        fig, axes = plt.subplots(figsize=figsize)
+        im, cbar = heatmap(
+            df,
+            row_labels=df.index,
+            col_labels=df.columns,
+            ax=axes,
+            cmap="YlGn",
+            cbarlabel="Median Prediction"
+        )
+        axes.set_ylabel(features[0])
+        axes.set_xlabel(features[1])
+        if annotate:
+            texts = annotate_heatmap(
+                im,
+                valfmt=annotate_fmt or "{x:.1f}",
+                fontsize=annotate_fontsize,
+                textcolors=annotate_colors,
+                threshold=annotate_color_threshold,
+            )
+        elif annotate_counts:
+            texts = annotate_heatmap(
+                im, counts.values,
+                valfmt=annotate_fmt or "{x}",
+                fontsize=annotate_fontsize,
+                textcolors=annotate_colors,
+                threshold=annotate_color_threshold)
 
     return fig, axes, summary_df
+
+
+def heatmap(data, row_labels, col_labels, ax=None,
+            cbar_kw={}, cbarlabel="",
+            xlabel_on_top=True,
+            **kwargs):
+    """
+    Create a heatmap from a numpy array and two lists of labels.
+    Parameters
+    ----------
+    data
+        A 2D numpy array of shape (M, N).
+    row_labels
+        A list or array of length M with the labels for the rows.
+    col_labels
+        A list or array of length N with the labels for the columns.
+    ax
+        A `matplotlib.axes.Axes` instance to which the heatmap is plotted.  If
+        not provided, use current axes or create a new one.  Optional.
+    cbar_kw
+        A dictionary with arguments to `matplotlib.Figure.colorbar`.  Optional.
+    cbarlabel
+        The label for the colorbar.  Optional.
+    **kwargs
+        All other arguments are forwarded to `imshow`.
+    """
+
+    if not ax:
+        ax = plt.gca()
+
+    # Plot the heatmap
+    im = ax.imshow(data, **kwargs)
+
+    # Create colorbar
+    # cbar = ax.figure.colorbar(im, ax=ax, **cbar_kw)
+    # cbar.ax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="5%", pad=0.2)
+    fig: plt.Figure = plt.gcf()
+    cbar = fig.colorbar(im, orientation="vertical", pad=0.2, cax=cax)
+    cbar.ax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
+
+    # Show all ticks and label them with the respective list entries.
+    ax.set_xticks(np.arange(data.shape[1]))
+    ax.set_xticklabels(col_labels)
+    ax.set_yticks(np.arange(data.shape[0]))
+    ax.set_yticklabels(row_labels)
+
+
+    if xlabel_on_top:
+        # Let the horizontal axes labeling appear on top.
+        ax.tick_params(top=True, bottom=False,
+                       labeltop=True, labelbottom=False)
+    #else:
+
+
+    # Rotate the tick labels and set their alignment.
+    plt.setp(ax.get_xticklabels(), rotation=-30, ha="right",
+             rotation_mode="anchor")
+
+    # Turn spines off and create white grid.
+    # in older versions ax.spines is dict and in newer versions it is list
+    if isinstance(ax.spines, dict):
+        for v in ax.spines.values():
+            v.set_visible(False)
+    else:
+        ax.spines[:].set_visible(False)
+
+    if xlabel_on_top:
+        ax.set_xticks(np.arange(data.shape[1]+1)-.5, minor=True)
+    else:
+        ax.set_xticks(np.arange(data.shape[1] - 1) + .5, minor=True)
+
+    ax.set_yticks(np.arange(data.shape[0]+1)-.5, minor=True)
+    ax.grid(which="minor", color="w", linestyle='-', linewidth=3)
+    ax.tick_params(which="minor", bottom=False, left=False)
+
+    return im, cbar
+
+
+def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
+                     textcolors=("black", "white"),
+                     threshold=None, **textkw):
+    """
+    A function to annotate a heatmap.
+    Parameters
+    ----------
+    im
+        The AxesImage to be labeled.
+    data
+        Data used to annotate.  If None, the image's data is used.  Optional.
+    valfmt
+        The format of the annotations inside the heatmap.  This should either
+        use the string format method, e.g. "$ {x:.2f}", or be a
+        `matplotlib.ticker.Formatter`.  Optional.
+    textcolors
+        A pair of colors.  The first is used for values below a threshold,
+        the second for those above.  Optional.
+    threshold
+        Value in data units according to which the colors from textcolors are
+        applied.  If None (the default) uses the middle of the colormap as
+        separation.  Optional.
+    **kwargs
+        All other arguments are forwarded to each call to `text` used to create
+        the text labels.
+    """
+
+    if not isinstance(data, (list, np.ndarray)):
+        data = im.get_array()
+
+    # Normalize the threshold to the images color range.
+    if threshold is not None:
+        threshold = im.norm(threshold)
+    else:
+        threshold = im.norm(data.max())/2.
+
+    # Set default alignment to center, but allow it to be
+    # overwritten by textkw.
+    kw = dict(horizontalalignment="center",
+              verticalalignment="center")
+    kw.update(textkw)
+
+    # Get the formatter in case a string is supplied
+    if isinstance(valfmt, str):
+        valfmt = matplotlib.ticker.StrMethodFormatter(valfmt)
+
+    # Loop over the data and create a `Text` for each "pixel".
+    # Change the text's color depending on the data.
+    texts = []
+    for i in range(data.shape[0]):
+        for j in range(data.shape[1]):
+            kw.update(color=textcolors[int(im.norm(data[i, j]) > threshold)])
+            text = im.axes.text(j, i, valfmt(data[i, j], None), **kw)
+            texts.append(text)
+
+    return texts
