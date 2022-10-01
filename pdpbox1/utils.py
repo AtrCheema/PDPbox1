@@ -95,6 +95,12 @@ def _expand_default(x, default):
 
 def _check_model(model):
     """Check model input, return class information and predict function"""
+
+    if hasattr(model, 'mode'):
+        if model.mode == "regression":
+            return 0, model.predict
+        else:
+            return len(model.classes_), model.predict_proba
     try:
         n_classes = len(model.classes_)
         predict = model.predict_proba
