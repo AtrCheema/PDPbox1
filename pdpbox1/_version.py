@@ -42,8 +42,8 @@ def get_config():
     cfg.VCS = "git"
     cfg.style = "pep440"
     cfg.tag_prefix = "v"
-    cfg.parentdir_prefix = "pdpbox-"
-    cfg.versionfile_source = "pdpbox/_version.py"
+    cfg.parentdir_prefix = "pdpbox1-"
+    cfg.versionfile_source = "pdpbox1/_version.py"
     cfg.verbose = False
     return cfg
 

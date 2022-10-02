@@ -1,5 +1,5 @@
 
-pdpbox.pdp.pdp_isolate
-----------------------
+pdpbox1.pdp.pdp_isolate
+-----------------------
 
-.. autofunction:: pdpbox.pdp.pdp_isolate
+.. autofunction:: pdpbox1.pdp.pdp_isolate

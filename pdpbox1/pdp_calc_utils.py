@@ -1,7 +1,7 @@
 
 import pandas as pd
 import numpy as np
-from pdpbox.utils import _get_string, _find_bucket
+from pdpbox1.utils import _get_string, _find_bucket
 
 
 def _calc_ice_lines(feature_grid, data, model, model_features, n_classes, feature, feature_type,

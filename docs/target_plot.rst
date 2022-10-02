@@ -1,6 +1,6 @@
 
 
-pdpbox.info_plots.target_plot
------------------------------
+pdpbox1.info_plots.target_plot
+------------------------------
 
-.. autofunction:: pdpbox.info_plots.target_plot
+.. autofunction:: pdpbox1.info_plots.target_plot

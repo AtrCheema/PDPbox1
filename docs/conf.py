@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# pdpbox documentation build configuration file, created by
+# pdpbox1 documentation build configuration file, created by
 # sphinx-quickstart on Wed May 16 22:51:43 2018.
 #
 # This file is execfile()d with the current directory set to its
@@ -53,7 +53,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'PDPbox'
+project = u'PDPbox1'
 copyright = u'2018, SauceCat'
 author = u'SauceCat'
 
@@ -62,7 +62,7 @@ author = u'SauceCat'
 # built documents.
 #
 
-from pdpbox import __version__ as pdpbox_version
+from pdpbox1 import __version__ as pdpbox_version
 
 # The short X.Y version.
 version = pdpbox_version
@@ -138,7 +138,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'pdpbox.tex', u'pdpbox Documentation',
+    (master_doc, 'pdpbox1.tex', u'pdpbox1 Documentation',
      u'SauceCat', 'manual'),
 ]
 
@@ -148,7 +148,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'pdpbox', u'pdpbox Documentation',
+    (master_doc, 'pdpbox1', u'pdpbox1 Documentation',
      [author], 1)
 ]
 
@@ -159,8 +159,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'pdpbox', u'pdpbox Documentation',
-     author, 'pdpbox', 'One line description of project.',
+    (master_doc, 'pdpbox1', u'pdpbox1 Documentation',
+     author, 'pdpbox1', 'One line description of project.',
      'Miscellaneous'),
 ]
 

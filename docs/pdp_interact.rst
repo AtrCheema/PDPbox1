@@ -1,5 +1,5 @@
 
-pdpbox.pdp.pdp_interact
------------------------
+pdpbox1.pdp.pdp_interact
+------------------------
 
-.. autofunction:: pdpbox.pdp.pdp_interact
+.. autofunction:: pdpbox1.pdp.pdp_interact

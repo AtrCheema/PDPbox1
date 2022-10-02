@@ -1,5 +1,5 @@
 
-pdpbox.pdp.pdp_plot
--------------------
+pdpbox1.pdp.pdp_plot
+--------------------
 
-.. autofunction:: pdpbox.pdp.pdp_plot
+.. autofunction:: pdpbox1.pdp.pdp_plot

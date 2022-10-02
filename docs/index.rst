@@ -44,12 +44,12 @@ Installation
 
 - through pip::
 
-  $ pip install pdpbox
+  $ pip install pdpbox1
 
 - through git::
 
-  $ git clone https://github.com/SauceCat/PDPbox.git
-  $ cd PDPbox
+  $ git clone https://github.com/AtrCheema/PDPbox1.git
+  $ cd PDPbox1
   $ python setup.py install
 
 .. _home-docs:

@@ -7,7 +7,7 @@ actual plot
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from pdpbox.info_plots import actual_plot_interact
+from pdpbox1.info_plots import actual_plot_interact
 
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.datasets import fetch_california_housing
