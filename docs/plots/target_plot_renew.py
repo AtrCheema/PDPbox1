@@ -1,4 +1,4 @@
-from pdpbox import info_plots, get_dataset
+from pdpbox1 import info_plots, get_dataset
 
 test_titanic = get_dataset.titanic()
 

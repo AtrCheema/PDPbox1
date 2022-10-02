@@ -1,5 +1,5 @@
-PDPbox
-======
+PDPbox1
+=======
 
 python partial dependence plot toolbox
 
@@ -8,7 +8,7 @@ Motivation
 
 This repository is inspired by ICEbox. The goal is to visualize the impact of certain
 features towards model prediction for any supervised learning algorithm using partial dependence
-plots [R1]_ [R2]_. PDPbox now supports all scikit-learn algorithms.
+plots [R1]_ [R2]_. PDPbox1 now supports all scikit-learn algorithms.
 
 
 The common headache
